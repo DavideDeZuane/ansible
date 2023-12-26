@@ -1,0 +1,10 @@
+---
+- name: "Debian Configuration"
+  become: yes
+  hosts: localhost
+
+  tasks:  
+    - import_tasks: package.yml
+    - import_tasks: cli.yml
+    - import_tasks: docker.yml
+    - import_tasks: webmin.yml

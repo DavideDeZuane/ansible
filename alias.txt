@@ -1,0 +1,4 @@
+alias la='exa -la --icons --sort=type'
+alias ll='exa -l --icons --sort=type'
+alias virsh='virsh -c qemu:///system'
+alias ip='ip --color'

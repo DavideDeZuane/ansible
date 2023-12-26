@@ -1,0 +1,50 @@
+---
+- name: Rimuovi pacchetti Docker
+  shell: "sudo apt-get remove -y {{ item }}"
+  with_items:
+    - docker.io
+    - docker-doc
+    - docker-compose
+    - podman-docker
+    - containerd
+    - runc
+
+- name: Install required packages
+  apt:
+    update_cache: yes
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg2
+      - software-properties-common
+
+- name: Add Docker GPG key
+  apt_key:
+    url: https://download.docker.com/linux/debian/gpg
+    state: present
+
+- name: Add Docker repository
+  apt_repository:
+    repo: deb [arch=$(dpkg --print-architecture) ] https://download.docker.com/linux/debian  $(. /etc/os-release && echo "$VERSION_CODENAME") stable
+    state: present
+    update_cache: yes
+
+- name: Install Docker Engine
+  apt:
+    update_cache: yes
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+
+- name: Install docker-compose
+  apt:
+    update_cache: yes
+    name:
+      - docker-compose
+
+- name: Start Docker service
+  service:
+    name: docker
+    state: started

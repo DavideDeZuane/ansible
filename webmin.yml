@@ -1,0 +1,35 @@
+---
+- name: Aggiunta del Repository
+  shell: |
+    sudo wget -qO - http://www.webmin.com/jcameron-key.asc | sudo apt-key add -
+  args:
+    executable: /bin/bash
+
+- name: Aggiunta del Repository
+  lineinfile:
+    path: /etc/apt/sources.list.d/webmin.list
+    create: yes
+    line: "deb http://download.webmin.com/download/repository sarge contrib"
+
+- name: Aggiunta del Repository
+  apt:
+    name: apt-transport-https
+    state: present
+    update_cache: yes
+
+- name: Installazione Webmin
+  apt:
+    name: webmin
+    state: present
+
+- name: Avvio Webmin
+  systemd:
+    name: webmin
+    enabled: yes
+    state: started
+
+- name: Installazione Completata
+  debug:
+    msg: "Webmin è stato installato con successo. Accedi tramite https://{{ ansible_host }}:10000/"
+
+
