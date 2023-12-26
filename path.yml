@@ -1,2 +1,6 @@
 PLAYBOOKS: "./playbooks"
 DOCKER: "{{PLAYBOOKS}}/docker"
+HA_PATH: "/srv/homeassistant"
+HA_PATH_CONFIG: "{{HA_PATH}}/config"
+HA_PATH_ADDON: "{{HA_PATH}}/addon" 
+NETWORK_HA: "hassio"

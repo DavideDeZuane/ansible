@@ -1,0 +1,41 @@
+---
+tasks:
+- name: Docker Network
+  block:
+    - name: Check Network
+      docker_network:
+        name: "{{ NETWORK_HA }}"
+        state: absent
+      when:
+        - HA_NETWORK_NAME in ansible_facts.docker_networks
+
+    - name: Crea la rete Docker
+      docker_network:
+        name: "{{ NETWORK_HA }}"
+  ignore_errors: yes  
+
+- name: Docker-Compose HA
+      copy:
+        dest: "{{ HA_PATH }}/docker-compose.yml"
+        content: |
+          version: '3'
+          services:
+            homeassistant:
+              image: homeassistant/home-assistant
+              container_name: ha
+              restart: always
+              ports:
+                - 8123:8123
+              volumes:
+                - "{{ HA_PATH_CONFIG }}:/config"
+              networks:
+                - "{{ NETWORK_HA }}"
+          networks:
+            default:
+              external:
+                name: "{{ NETWORK_HA }}"
+
+- name: Start Home-Assistant
+  community.general.docker_compose:
+    project_src: "{{ HA_PATH }}/docker-compose.yml"
+    state: present 
