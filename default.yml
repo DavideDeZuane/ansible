@@ -2,9 +2,15 @@
 - name: "Debian Configuration"
   become: yes
   hosts: localhost
+  vars_prompt:
+    - name: user_name
+      prompt: "Enter the username"
+      private: no  # Set to yes if the input should be hidden (e.g., for passwords)
+
+    - name: user_password
+      prompt: "Enter the user password"
+      private: yes
 
   tasks:  
     - import_tasks: package.yml
-    - import_tasks: cli.yml
     - import_tasks: docker.yml
-      #    - import_tasks: webmin.yml

@@ -1,0 +1,54 @@
+---
+- name: Remove existing packages
+  shell: "sudo apt-get remove -y {{ item }}"
+  with_items:
+    - docker.io
+    - docker-doc
+    - docker-compose
+    - podman-docker
+    - containerd
+    - runc
+
+- name: Install required packages
+  apt:
+    update_cache: yes
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg2
+      - software-properties-common
+
+- name: Add Docker GPG-key
+  apt_key:
+    url: https://download.docker.com/linux/debian/gpg
+    state: present
+
+- name: PC info
+  command: /bin/bash -c 'echo "$(dpkg --print-architecture) $(. /etc/os-release && echo "$VERSION_CODENAME")"'
+  register: docker_repo_info
+
+- name: Add Docker Repository
+  apt_repository:
+    repo: "deb [arch={{docker_repo_info.stdout.split(' ')[0] }}] https://download.docker.com/linux/debian {{docker_repo_info.stdout.split(' ')[1]}} stable"
+    state: present
+    update_cache: yes
+
+- name: Installing Engine
+  apt:
+    update_cache: yes
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+
+- name: Installing docker-compose
+  apt:
+    update_cache: yes
+    name:
+      - docker-compose
+
+- name: Starting service
+  service:
+    name: docker
+    state: started

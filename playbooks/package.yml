@@ -1,0 +1,28 @@
+---
+- name: Update apt cache
+  apt:
+    update_cache: yes
+    upgrade: yes
+
+- name: "Install system packages"
+  apt: 
+    name:
+      - neovim 
+      - curl
+      - wget
+      - bat
+      - exa
+      - neofetch
+      - zsh
+      - ethtool
+      - git
+    state: latest
+
+- name: "Install monitoring packages"
+  apt:
+    name:
+     - htop
+     - net-tools
+     - ncdu
+     - nmap
+    state: latest

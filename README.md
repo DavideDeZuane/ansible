@@ -15,4 +15,4 @@ E' possibile attraverso ansible realizzare dei prompt interattivi per fornire
 gli input da riga di comando, quindi potrebbe essere un idea andare a setuppare
 le variabili in questo modo e poi lanciare lo script di configurazione
 
-`vars_promp`
+`vars_prompt`
