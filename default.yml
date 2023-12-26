@@ -2,6 +2,9 @@
 - name: "Debian Configuration"
   become: yes
   hosts: localhost
+  vars_file:
+    - path.yml
+
   vars_prompt:
     - name: user_name
       prompt: "Enter the username"
@@ -13,4 +16,4 @@
 
   tasks:  
     - import_tasks: package.yml
-    - import_tasks: docker.yml
+    - import_tasks: "{{DOCKER}}/setup.yml"

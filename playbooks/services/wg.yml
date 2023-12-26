@@ -1,0 +1,44 @@
+---
+- hosts: wireguard_server
+  become: yes
+  vars:
+    # Configurazioni di base
+    wg_server_private_key: "GENERATE_YOUR_OWN_PRIVATE_KEY"
+    wg_subnet: "10.0.0.0/24"
+    wg_port: 51820
+
+    # Lista degli utenti WireGuard
+    wg_users:
+      - name: "user1"
+        public_key: "GENERATE_YOUR_OWN_PUBLIC_KEY"
+        address: "10.0.0.2/32"
+
+      # Aggiungi altri utenti secondo necessità
+
+  tasks:
+    - name: Installa WireGuard
+      apt:
+        name: wireguard
+        state: present
+
+    - name: Configura WireGuard
+      copy:
+        dest: /etc/wireguard/wg0.conf
+        content: |
+          [Interface]
+          Address = {{ wg_subnet }}
+          PrivateKey = {{ wg_server_private_key }}
+          ListenPort = {{ wg_port }}
+
+          {% for user in wg_users %}
+          [Peer]
+          PublicKey = {{ user.public_key }}
+          AllowedIPs = {{ user.address }}
+          {% endfor %}
+
+    - name: Attiva e abilita il servizio WireGuard
+      systemd:
+        name: "wg-quick@wg0"
+        enabled: yes
+        state: started
+
