@@ -4,16 +4,10 @@
   hosts: localhost
   vars_file:
     - path.yml
-
-  vars_prompt:
-    - name: user_name
-      prompt: "Enter the username"
-      private: no  # Set to yes if the input should be hidden (e.g., for passwords)
-
-    - name: user_password
-      prompt: "Enter the user password"
-      private: yes
-
+  
+  ##############################################################################
+  # DEFINE ALL TASKS TO LAUNCH
+  ##############################################################################
   tasks:  
-    - import_tasks: package.yml
-    - import_tasks: "{{DOCKER}}/setup.yml"
+    - import_tasks: "{{PLAYBOOKS}}/package.yml"
+    - import_tasks: "{{PLAYBOOKS_DOCKER}}/setup.yml"
